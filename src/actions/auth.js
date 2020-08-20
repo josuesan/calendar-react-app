@@ -1,6 +1,7 @@
 import { types } from "../types/types";
 import { apiFetch, apiAuthFetch } from "../helpers/apiService";
 import Swal from "sweetalert2";
+import { eventPurge } from "./event";
 
 export const startLogin = (email, password) => {
   return async (dispatch) => {
@@ -38,7 +39,7 @@ export const startChecking = () => {
   return async (dispatch) => {
 
     const res = await apiAuthFetch('auth/renew');
-    const data = res.json();
+    const data = await res.json();
     if (!data.ok) {
       return dispatch(checkingFinished());
     }
@@ -64,6 +65,7 @@ export const startLogout = () => {
   return (dispatch) => {
     localStorage.clear();
     dispatch(logout());
+    dispatch(eventPurge());
   }
 }
 const logout = () => ({

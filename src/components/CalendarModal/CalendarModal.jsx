@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import DateTimePicker from 'react-datetime-picker';
-import './index.scss';
 import moment from 'moment';
-import Swal from 'sweetalert2'
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import DateTimePicker from 'react-datetime-picker';
+import Modal from 'react-modal';
+import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import { eventClearActiveEvent, eventStartAddNew, startEventUpdate } from '../../actions/event';
 import { uiCloseModal } from '../../actions/ui';
-import { eventAddNew, eventClearActiveEvent, eventUpdated } from '../../actions/event';
+import './index.scss';
 const customStyles = {
   content: {
     top: '50%',
@@ -22,7 +22,7 @@ const now = moment().minutes(0).seconds(0).add(1, 'hours');
 const nowEnd = now.clone().add(1, 'hours');
 
 const initEvent = {
-  title: 'Event',
+  title: '',
   notes: '',
   start: now.toDate(),
   end: nowEnd.toDate()
@@ -59,17 +59,10 @@ const CalendarModal = () => {
     }
 
     if (activeEvent) {
-      dispatch(eventUpdated(formValues));
+      dispatch(startEventUpdate(formValues));
     }
     else {
-      dispatch(eventAddNew({
-        ...formValues,
-        id: new Date().getTime(),
-        user: {
-          id: 2,
-          name: 'Josue'
-        }
-      }));
+      dispatch(eventStartAddNew(formValues));
     }
 
     setTitleValid(true);
@@ -85,9 +78,9 @@ const CalendarModal = () => {
 
 
   const closeModal = () => {
-    setFormValues(initEvent);
     dispatch(uiCloseModal());
     dispatch(eventClearActiveEvent());
+    setFormValues(initEvent);
   }
 
   const handleStartDateChange = (e) => {
