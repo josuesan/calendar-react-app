@@ -17,7 +17,8 @@ const customStyles = {
     transform: 'translate(-50%, -50%)'
   }
 };
-Modal.setAppElement('#root')
+if (process.env.NODE_ENV !== 'test')
+  Modal.setAppElement('#root')
 const now = moment().minutes(0).seconds(0).add(1, 'hours');
 const nowEnd = now.clone().add(1, 'hours');
 
@@ -101,21 +102,22 @@ const CalendarModal = () => {
 
   return (
     <Modal
+      ariaHideApp={process.env.NODE_ENV !== 'test'}
       isOpen={modalOpen}
-      // onAfterOpen={afterOpenModal}
       onRequestClose={closeModal}
       style={customStyles}
       className="modal"
       overlayClassName="modal-bg"
       closeTimeoutMS={200}
     >
-      {activeEvent
-        ? (
-          <h1>Edit event</h1>
-        )
-        : (
-          <h1>New event</h1>
-        )
+      {
+        activeEvent
+          ? (
+            <h1> Edit event</h1 >
+          )
+          : (
+            <h1>New event</h1>
+          )
       }
 
       <hr />
@@ -172,7 +174,7 @@ const CalendarModal = () => {
         </button>
 
       </form>
-    </Modal>
+    </Modal >
   )
 }
 
